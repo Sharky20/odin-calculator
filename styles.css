@@ -36,9 +36,14 @@ body {
     flex-shrink: 1;
 }
 
+.funcButton:hover {
+    background-color: darkorange;
+}
+
 .funcButton {
     background-color: orange;
 }
+
 
 button {
     padding: 50px;

@@ -9,9 +9,10 @@ const addBtn = document.querySelector("#add");
 const equalBtn = document.querySelector("#equal");
 const floatBtn = document.querySelector("#float");
 const display = document.querySelector(".display");
+const opBtns = Array.from(document.querySelectorAll(".operatorButton"));
 
-let a = 0;
-let b = 0;
+let currNum = null;
+let lastNum = null;
 let operator = "";
 
 function add(a, b) {
@@ -52,8 +53,44 @@ function operate(a, b, operator) {
     return num;
 }
 
+posNegBtn.addEventListener("click", (e) => {
+    currNum = currNum * -1;
+    display.textContent = currNum;
+})
+
 numBtns.forEach((button) => {
     button.addEventListener("click", (e) => {
-        display.textContent = button.textContent;
-    })
+        if (currNum != null) {
+            currNum = currNum * 10 + Number(button.textContent);
+            display.textContent = currNum;
+        }
+        else {
+            currNum = Number(button.textContent);
+            display.textContent = currNum;
+        }
+    });
+});
+
+opBtns.forEach((button) => {
+    button.addEventListener("click", (e) => {
+        operator = button.textContent;
+        lastNum = currNum;
+        currNum = 0;
+    });
+});
+
+clearBtn.addEventListener("click", (e) => {
+    currNum = null;
+    lastNum = null;
+    operator = "";
+    display.textContent = 0;
+});
+
+equalBtn.addEventListener("click", (e) => {
+    if (lastNum != null && operator != "") {
+        let result = operate(lastNum, currNum, operator);
+        lastNum = result;
+        currNum = 0;
+        display.textContent = result;
+    }
 })
