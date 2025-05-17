@@ -8,6 +8,7 @@ body {
     background-color: grey;
     text-align: end;
     font-size: 66px;
+    border: 15px solid black;
 }
 
 .calcContainer {

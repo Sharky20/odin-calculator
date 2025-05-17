@@ -28,7 +28,14 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
+    if (b == 0) {
+        return "error";
+    }
     return a / b;
+}
+
+function modulo(a, b) {
+    return a % b;
 }
 
 function operate(a, b, operator) {
@@ -46,11 +53,24 @@ function operate(a, b, operator) {
         case "/": 
             num = divide(a, b);
             break;
+        case "%":
+            num = modulo(a, b);
+            break;
         default: 
             return NaN;
     }
+    if (num == "error") {
+        return "error";
+    }
     num = Math.round(num * 1000) / 1000;
     return num;
+}
+
+function clearAll() {
+    currNum = null;
+    lastNum = null;
+    operator = "";
+    display.textContent = 0;
 }
 
 posNegBtn.addEventListener("click", (e) => {
@@ -73,24 +93,32 @@ numBtns.forEach((button) => {
 
 opBtns.forEach((button) => {
     button.addEventListener("click", (e) => {
-        operator = button.textContent;
-        lastNum = currNum;
-        currNum = 0;
+        if (operator == "") {
+            operator = button.textContent;
+            lastNum = currNum;
+            currNum = null;
+        }
+        else {
+            lastNum = operate(lastNum, currNum, operator);
+            if (lastNum == "error") {
+                display.textContent = "error";
+                clearAll();
+            }
+            currNum = null;
+            display.textContent = lastNum;
+            operator = button.textContent;
+        }
     });
 });
 
 clearBtn.addEventListener("click", (e) => {
-    currNum = null;
-    lastNum = null;
-    operator = "";
-    display.textContent = 0;
+    clearAll();
 });
 
 equalBtn.addEventListener("click", (e) => {
     if (lastNum != null && operator != "") {
-        let result = operate(lastNum, currNum, operator);
-        lastNum = result;
-        currNum = 0;
-        display.textContent = result;
+        lastNum = operate(lastNum, currNum, operator);
+        currNum = null;
+        display.textContent = lastNum;
     }
 })
