@@ -1,0 +1,47 @@
+body {
+    display:flex;
+    justify-content: center;
+}
+
+.display {
+    padding: 50px;
+    background-color: grey;
+    text-align: end;
+    font-size: 66px;
+}
+
+.calcContainer {
+    background-color: black;
+    display:flex;
+    flex-direction: column;
+    padding: 25px;
+}
+
+.row {
+    display:flex;
+    justify-content: space-evenly;
+    flex-grow: 1;
+}
+
+#zeroButton {
+    flex-grow: 5;
+    flex-basis: 500;
+}
+
+#float {
+    flex-shrink: 1;
+}
+
+#equal {
+    flex-shrink: 1;
+}
+
+.funcButton {
+    background-color: orange;
+}
+
+button {
+    padding: 50px;
+    font-size: 56px;
+    flex-basis:200px;
+}
