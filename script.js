@@ -161,7 +161,7 @@ clearBtn.addEventListener("click", () => {
 });
 
 equalBtn.addEventListener("click", () => {
-    if (lastNum != null && operator != "") {
+    if (lastNum != null && operator != "" && currNum != null) {
         lastNum = operate(lastNum, currNum, operator);
         currNum = null;
         floatMode = false;
