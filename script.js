@@ -119,6 +119,7 @@ equalBtn.addEventListener("click", (e) => {
     if (lastNum != null && operator != "") {
         lastNum = operate(lastNum, currNum, operator);
         currNum = null;
+        operator = "";
         display.textContent = lastNum;
     }
 })
