@@ -11,7 +11,6 @@ const floatBtn = document.querySelector("#float");
 const display = document.querySelector(".display");
 const opBtns = Array.from(document.querySelectorAll(".operatorButton"));
 const funcBtns = Array.from(document.querySelectorAll(".funcButton"));
-console.log(funcBtns);
 
 let currNum = null;
 let lastNum = null;
@@ -112,7 +111,6 @@ numBtns.forEach((button) => {
         if (operator == "") {
             lastNum = null;
         }
-        console.log(`last: ${lastNum}, curr: ${currNum}, op: ${operator}`);
     });
 });
 
@@ -127,10 +125,6 @@ opBtns.forEach((button) => {
             floatMode = false;
             floatValue = 0.1;
         }
-        else if (currNum === null && lastNum === null) {
-            console.log(`last: ${lastNum}, curr: ${currNum}, op: ${operator}`)
-            return;
-        }
         else if (operator == "" && currNum != null) {
             operator = button.textContent;
             lastNum = currNum;
@@ -144,9 +138,7 @@ opBtns.forEach((button) => {
             floatValue = 0.1;
         }
         else {
-            console.log(`before: last: ${lastNum}, curr: ${currNum}, op: ${operator}`);
             lastNum = operate(lastNum, currNum, operator);
-            console.log(`after: last: ${lastNum}, curr: ${currNum}, op: ${operator}`);
             floatMode = false;
             floatValue = 0.1;
             if (lastNum == "error") {
@@ -157,7 +149,6 @@ opBtns.forEach((button) => {
             display.textContent = lastNum;
             operator = button.textContent;
         }
-        console.log(`before: last: ${lastNum}, curr: ${currNum}, op: ${operator}`)
     });
 });
 
@@ -178,18 +169,14 @@ equalBtn.addEventListener("click", () => {
         operator = "";
         display.textContent = lastNum;
     }
-    console.log(`last: ${lastNum}, curr: ${currNum}, op: ${operator}`);
 });
 
 window.addEventListener("keypress", (e) => {
-    console.log(e.key);
     if (e.key >= 0 && e.key <= 9) {
         numBtns.find((btn) => btn.textContent == e.key).dispatchEvent(new Event("click"));
-        console.log("found!!!");
     }
     else if ("%+-*/=".includes(e.key)) {
         funcBtns.find((btn) => btn.textContent == e.key).dispatchEvent(new Event("click"));
-        console.log("found!!!");
     }
     else if (e.key === ".") {
         floatBtn.dispatchEvent(new Event("click"));
@@ -202,7 +189,6 @@ window.addEventListener("keypress", (e) => {
     }
     else if (e.key === "c") {
         clearAll();
-        console.log("escape");
     }
 });
 
