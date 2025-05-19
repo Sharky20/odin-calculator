@@ -10,10 +10,14 @@ const equalBtn = document.querySelector("#equal");
 const floatBtn = document.querySelector("#float");
 const display = document.querySelector(".display");
 const opBtns = Array.from(document.querySelectorAll(".operatorButton"));
+const funcBtns = Array.from(document.querySelectorAll(".funcButton"));
+console.log(funcBtns);
 
 let currNum = null;
 let lastNum = null;
 let operator = "";
+let floatMode = false;
+let floatValue = 0.1;
 
 function add(a, b) {
     return a + b;
@@ -70,36 +74,81 @@ function clearAll() {
     currNum = null;
     lastNum = null;
     operator = "";
+    floatMode = false;
+    floatValue = 0.1;
     display.textContent = 0;
 }
 
-posNegBtn.addEventListener("click", (e) => {
-    currNum = currNum * -1;
-    display.textContent = currNum;
-})
+posNegBtn.addEventListener("click", () => {
+    if (currNum != null) {
+        currNum = currNum * -1;
+        display.textContent = currNum;
+    }
+});
 
 numBtns.forEach((button) => {
-    button.addEventListener("click", (e) => {
+    button.addEventListener("click", () => {
         if (currNum != null) {
-            currNum = currNum * 10 + Number(button.textContent);
+            if (floatMode == false) {
+                currNum = currNum * 10 + Number(button.textContent);
+            }
+            else {
+                currNum = currNum + Number(button.textContent) * floatValue;
+                floatValue /= 10;
+                currNum = Math.round(currNum * 1000) / 1000;
+            }
             display.textContent = currNum;
         }
         else {
-            currNum = Number(button.textContent);
+            if (floatMode) {
+                currNum = Number(button.textContent) * floatValue;
+                floatValue /= 10;
+            }
+            else {
+                currNum = Number(button.textContent);
+            }
             display.textContent = currNum;
         }
+        if (operator == "") {
+            lastNum = null;
+        }
+        console.log(`last: ${lastNum}, curr: ${currNum}, op: ${operator}`);
     });
 });
 
 opBtns.forEach((button) => {
-    button.addEventListener("click", (e) => {
-        if (operator == "") {
+    button.addEventListener("click", () => {
+        if (currNum != null && lastNum != null && operator != "") {
+            result = operate(lastNum, currNum, operator);
+            operator = button.textContent;
+            display.textContent = result;
+            lastNum = result;
+            currNum = null;
+            floatMode = false;
+            floatValue = 0.1;
+        }
+        else if (currNum === null && lastNum === null) {
+            console.log(`last: ${lastNum}, curr: ${currNum}, op: ${operator}`)
+            return;
+        }
+        else if (operator == "" && currNum != null) {
             operator = button.textContent;
             lastNum = currNum;
+            floatMode = false;
+            floatValue = 0.1;
             currNum = null;
         }
+        else if (currNum === null) {
+            operator = button.textContent;
+            floatMode = false;
+            floatValue = 0.1;
+        }
         else {
+            console.log(`before: last: ${lastNum}, curr: ${currNum}, op: ${operator}`);
             lastNum = operate(lastNum, currNum, operator);
+            console.log(`after: last: ${lastNum}, curr: ${currNum}, op: ${operator}`);
+            floatMode = false;
+            floatValue = 0.1;
             if (lastNum == "error") {
                 display.textContent = "error";
                 clearAll();
@@ -108,18 +157,57 @@ opBtns.forEach((button) => {
             display.textContent = lastNum;
             operator = button.textContent;
         }
+        console.log(`before: last: ${lastNum}, curr: ${currNum}, op: ${operator}`)
     });
 });
 
-clearBtn.addEventListener("click", (e) => {
+floatBtn.addEventListener("click", () => {
+    floatMode = true;
+});
+
+clearBtn.addEventListener("click", () => {
     clearAll();
 });
 
-equalBtn.addEventListener("click", (e) => {
+equalBtn.addEventListener("click", () => {
     if (lastNum != null && operator != "") {
         lastNum = operate(lastNum, currNum, operator);
         currNum = null;
+        floatMode = false;
+        floatValue = 0.1;
         operator = "";
         display.textContent = lastNum;
     }
-})
+    console.log(`last: ${lastNum}, curr: ${currNum}, op: ${operator}`);
+});
+
+window.addEventListener("keypress", (e) => {
+    console.log(e.key);
+    if (e.key >= 0 && e.key <= 9) {
+        numBtns.find((btn) => btn.textContent == e.key).dispatchEvent(new Event("click"));
+        console.log("found!!!");
+    }
+    else if ("%+-*/=".includes(e.key)) {
+        funcBtns.find((btn) => btn.textContent == e.key).dispatchEvent(new Event("click"));
+        console.log("found!!!");
+    }
+    else if (e.key === ".") {
+        floatBtn.dispatchEvent(new Event("click"));
+    }
+    else if (e.key === "Enter") {
+        equalBtn.dispatchEvent(new Event("click"));
+    }
+    else if (e.key === "!") {
+        posNegBtn.dispatchEvent(new Event("click"));
+    }
+    else if (e.key === "c") {
+        clearAll();
+        console.log("escape");
+    }
+});
+
+window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        clearAll();
+    }
+});
