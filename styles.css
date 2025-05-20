@@ -28,15 +28,17 @@ body {
 
 #zeroButton {
     flex-grow: 5;
-    flex-basis: 500;
+    flex-basis: 1;
 }
 
 #float {
     flex-shrink: 1;
+    flex-grow: 0;
 }
 
 #equal {
     flex-shrink: 1;
+    flex-grow: 0;
 }
 
 .funcButton:hover {
